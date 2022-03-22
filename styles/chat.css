@@ -1,0 +1,131 @@
+#chat {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    background-color: #fff;
+    z-index: 1000;
+}
+
+.header__avatar {
+    width: 50%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .header__avatar img {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    object-fit: cover;
+    margin-left: 10%;
+    margin-right: 5%;
+  }
+  
+  .chat {
+    height: 90%;
+    border-top: 1px solid #c9d1ea;
+    display: flex;
+    flex-direction: column;
+    padding-top: 5%;
+    overflow-y: scroll;
+  }
+  
+  .chat::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .message {
+    width: fit-content;
+    max-width: 35%;
+    margin: 3% 0px;
+  }
+  .message-left {
+    border-radius: 30px 30px 30px 0px;
+    background: #aebbe380;
+    position: relative;
+  }
+  
+  .message-right {
+    align-self: flex-end;
+    border-radius: 30px 30px 0px 30px;
+    background: #c2cae180;
+    position: relative;
+  }
+  
+  .message-content {
+    height: fit-content;
+    padding: 15px 15px;
+    border-radius: 30px 30px 30px 30px;
+  }
+  
+  .message-content img {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .message-time {
+    position: absolute;
+    bottom: -20px;
+  }
+  
+  .message-time * {
+    font-size: 0.625rem;
+  }
+  
+  .message-left .message-time {
+    left: 0;
+  }
+  
+  .message-right .message-time {
+    right: 0;
+  }
+  
+  .navigation__input {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .navigation__input input {
+    background: #ffffff;
+    width: 100%;
+    padding-right: 12%;
+  }
+  
+  .navigation__input input::placeholder {
+    color: #5e6ea8;
+  }
+  
+  .input-buttons {
+    position: absolute;
+    width: 10%;
+    display: flex;
+    justify-content: space-evenly;
+    right: 10px;
+  }
+  
+  .navigation__input i {
+    color: #a6afcc;
+    font-size: 18px;
+  }
+  
+  .navigation__input i:hover {
+    color: #5e6ea8;
+    cursor: pointer;
+  }
+  
+  @media screen and (max-width: 480px) {
+    .chat {
+      height: 95%;
+    }
+    .message {
+      max-width: 45%;
+    }
+    .input-buttons {
+      width: 20%;
+    }
+  }
+  

@@ -1,4 +1,4 @@
-html,
+/* html,
 body {
   padding: 0;
   margin: 0;
@@ -13,4 +13,130 @@ a {
 
 * {
   box-sizing: border-box;
+} */
+
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css");
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #2d2d2d;
 }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#__next {
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper {
+  width: 85%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+input {
+  border: 0;
+  padding: 7px 16px;
+  background: #e4e4e49f;
+  border-radius: 25px;
+  height: 15px;
+}
+
+input::placeholder {
+  color: #5e6ea880;
+}
+
+.grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 10% 80% 10%;
+  position: relative;
+}
+.header .wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header i {
+  font-size: 20px;
+}
+
+.header input {
+  width: 80%;
+}
+
+.navigation {
+  background-color: #d0d6e9;
+  z-index: 100;
+}
+.navigation-buttons {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navigation-button {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation-button i {
+  font-size: 25px;
+  color: #7e8cbd;
+}
+
+.navigation-button i.active {
+  font-size: 25px;
+  color: #5e6ea8;
+}
+
+.green {
+  background-color: #5cc19e !important;
+}
+
+.blackout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #2d2d2d85;
+  z-index: 500;
+  display: none;
+}
+
+@media screen and (min-width: 987px) {
+  .wrapper {
+    width: 55%;
+  }
+}
+ 
