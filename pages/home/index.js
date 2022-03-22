@@ -1,9 +1,10 @@
-import Chat from '../../components/chat/chat'
+import Chat from "../../components/chat/chat";
+import Navigation from "../../components/navigation/navigation";
 
 export default function Home() {
-    return (
-      <>
-        <div class="grid" id="home">
+  return (
+    <>
+      <div class="grid" id="home">
         <div className="blackout"></div>
         <header class="header">
           <div class="wrapper">
@@ -11,7 +12,7 @@ export default function Home() {
             <input type="text" placeholder="search" />
           </div>
         </header>
-  
+
         <div class="wrapper">
           <div class="contacts">
             <div class="contact" onClick={() => showChat()}>
@@ -22,7 +23,9 @@ export default function Home() {
                 />
               </div>
               <div class="contact__info">
-                <div class="contact__name"><h3>Roman</h3></div>
+                <div class="contact__name">
+                  <h3>Roman</h3>
+                </div>
                 <div class="contact__last-message">
                   <p>how its going?</p>
                   <p>12:12</p>
@@ -37,7 +40,9 @@ export default function Home() {
                 />
               </div>
               <div class="contact__info">
-                <div class="contact__name"><h3>David</h3></div>
+                <div class="contact__name">
+                  <h3>David</h3>
+                </div>
                 <div class="contact__last-message">
                   <p class="not-read">Hello!</p>
                   <p>12:30</p>
@@ -46,23 +51,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <nav class="navigation">
-          <div class="wrapper">
-            <div class="navigation-buttons">
-              <div class="navigation-button">
-                <a href="#"><i class="bi bi-chat-fill active"></i></a>
-              </div>
-              <div class="navigation-button">
-                <a href="#"><i class="bi bi-people-fill"></i></a>
-              </div>
-              <div class="navigation-button">
-                <a href="#"> <i class="bi bi-bag-fill"></i></a>
-              </div>
-            </div>
-          </div>
-        </nav>
+
+        <Navigation />
       </div>
-      <Chat/>
-</>
-    )
+      <Chat />
+    </>
+  );
 }
