@@ -1,32 +1,68 @@
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function SingUp() {
-    return(
-        <form class="welcome">
-        <img src="../wave.svg" alt="" />
-  
-        <div class="wrapper">
-          <div class="welcome__heading">
-            <h1>Cyber<br />Message<i class="bi bi-chevron-double-down"></i></h1>
-          </div>
-          <div class="welcome__inputs">
-            <h2>Sign up</h2>
-            <div class="signup-progress">
-              <div class="step green">1 step</div>
-              <div class="step">2 step</div>
-              <div class="step">finish</div>
-            </div>
-            <input type="text" placeholder="firstname" />
-            <input type="text" placeholder="lastname" />
-          </div>
-          <div class="welcome__buttons">
-            <button disabled><h2>next step</h2></button>
-            <p>or</p>
-            <Link href="/">
-            <a>sign in</a>
-            </Link>
-          </div>
+  return (
+    <form
+      class="welcome"
+      method="POST"
+      onChange={(event) => validateRegistrationFormInputs(event)}
+      action="/signup"
+    >
+      <img src="../wave.svg" alt="" />
+      <div class="wrapper">
+        <div class="welcome__heading">
+          <h1>
+            Cyber
+            <br />
+            Message<i class="bi bi-chevron-double-down"></i>
+          </h1>
         </div>
-      </form>
-    )
+        <div class="welcome__inputs">
+          <h2>Sign up</h2>
+
+          <input
+            type="text"
+            placeholder="firstname"
+            id="firstname"
+            name="firstname"
+            autoComplete="off"
+            maxLength="100"
+          />
+          <input
+            type="text"
+            placeholder="lastname"
+            id="lastname"
+            name="lastname"
+            autoComplete="off"
+            maxLength="100"
+          />
+          <input
+            type="text"
+            placeholder="login"
+            id="login"
+            name="login"
+            autoComplete="off"
+            maxLength="25"
+          />
+          <input
+            type="password"
+            placeholder="password"
+            id="password"
+            name="password"
+            autoComplete="off"
+            maxLength="100"
+          />
+        </div>
+        <div class="welcome__buttons">
+          <button type="submit" id="submit" disabled>
+            <h2>create account</h2>
+          </button>
+          <p>or</p>
+          <Link href="/">
+            <a>sign in</a>
+          </Link>
+        </div>
+      </div>
+    </form>
+  );
 }

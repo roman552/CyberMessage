@@ -1,7 +1,7 @@
 import Chat from "../../components/chat/chat";
 import Navigation from "../../components/navigation/navigation";
 
-export default function Home() {
+function Home(props) {
   return (
     <>
       <div class="grid" id="home">
@@ -58,3 +58,11 @@ export default function Home() {
     </>
   );
 }
+
+Home.getInitialProps = ({ query }) => {
+  // Loads loggined user's contacts and messages through id
+  // ex. database.getUsersContacts(id)
+  return { query };
+};
+
+export default Home;
