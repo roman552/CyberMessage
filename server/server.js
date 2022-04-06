@@ -1,10 +1,13 @@
 const express = require("express");
 const session = require("express-session");
+const sharedsession = require("express-socket.io-session");
+
 const bodyParser = require("body-parser");
 const next = require("next");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
+const { connectToDB } = require("./database");
 const { userModel } = require("./models/user");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
@@ -12,25 +15,70 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+let connectedUsers = [];
+
+function addToConnectedUsers(userID, socket) {
+  let connectedUser = findConnectedUser(userID);
+
+  if (connectedUser) {
+    connectedUser.sockets.push(socket);
+
+    return;
+  }
+
+  connectedUsers.push({ userID, sockets: [socket] });
+}
+
+function findConnectedUser(userID) {
+  return connectedUsers.find((user) => user.userID === userID);
+}
+
+const sessionMiddleware = session({
+  secret: "mysecret",
+  resave: true,
+  saveUninitialized: true,
+  credentials: true,
+  name: "sid",
+});
+
+const server = express();
+
+server.use(bodyParser.urlencoded({ extended: false }));
+server.use(bodyParser.json());
+
+server.use(sessionMiddleware);
+
+serverHTTP = createServer(server);
+const io = new Server(serverHTTP, {
+  cors: { origin: "*", credentials: true },
+});
+
+io.use(
+  sharedsession(sessionMiddleware, {
+    autoSave: true,
+  })
+);
+
 app.prepare().then(() => {
-  const server = express();
-
-  server.use(
-    session({
-      secret: "mysecret",
-      saveUninitialized: true,
-      resave: true,
-    })
-  );
-
-  server.use(bodyParser.urlencoded({ extended: false }));
-  server.use(bodyParser.json());
-
-  serverHTTP = createServer(server);
-  const io = new Server({ cors: { origin: "*" } }).listen(serverHTTP);
-
   io.on("connect", (socket) => {
     console.log("connected", socket.id);
+    try {
+      let userID = socket.handshake.session.user.id;
+      if (userID) {
+        addToConnectedUsers(userID, socket.id);
+      }
+    } catch (error) {
+      console.log("user is not authorized yet");
+    }
+
+    socket.on("find-people", async (args) => {
+      let user = await userModel.getUserByLogin(args.login);
+      socket.emit("find-people-response", user);
+    });
+
+    socket.on("send-friend-request", async (friendID) => {
+      // send request
+    });
   });
 
   server.get("/", (req, res) => {
@@ -73,6 +121,7 @@ app.prepare().then(() => {
         }
 
         req.session.user = { id };
+        req.session.save();
       } else {
         return res.send("something wrong");
       }
@@ -115,19 +164,45 @@ app.prepare().then(() => {
         }
 
         req.session.user = { id };
+        req.session.save();
       }
     }
 
     res.redirect("/home");
   });
 
-  server.get("/home", (req, res) => {
+  server.get("/home", async (req, res) => {
+    let actualPage;
+    let queryParams;
+
     if (!req.session.user) {
-      res.send("not allowed! please sign in.");
+      actualPage = "/";
+      return app.render(req, res, actualPage, queryParams);
     } else {
-      const actualPage = "/home";
-      const queryParams = req.session.user;
-      app.render(req, res, actualPage, queryParams);
+      actualPage = "/home";
+      queryParams = {
+        ...req.session.user,
+        contacts: await userModel.getUserContactsByID(req.session.user.id),
+      };
+
+      return app.render(req, res, actualPage, queryParams);
+    }
+  });
+
+  server.get("/contacts", async (req, res) => {
+    let actualPage;
+    let queryParams;
+
+    if (!req.session.user) {
+      actualPage = "/";
+      return app.render(req, res, actualPage, queryParams);
+    } else {
+      actualPage = "/contacts";
+      queryParams = {
+        ...req.session.user,
+        contacts: await userModel.getUserContactsByID(req.session.user.id),
+      };
+      return app.render(req, res, actualPage, queryParams);
     }
   });
 
@@ -137,6 +212,7 @@ app.prepare().then(() => {
 
   serverHTTP.listen(port, (err) => {
     if (err) throw err;
+    connectToDB();
     console.log(`> Ready on http://localhost:${port}`);
   });
 });

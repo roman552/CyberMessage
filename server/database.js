@@ -1,17 +1,20 @@
 const mysql = require("mysql");
+const config = require("./config.json");
 
 let connection = mysql.createConnection({
-  database: "cybermessage",
-  host: "localhost",
-  port: 3307,
-  user: "root",
-  password: "",
+  database: config.database.databaseName,
+  host: config.database.host,
+  port: config.database.port,
+  user: config.database.user,
+  password: config.database.password,
 });
 
-connection.connect((err) => {
-  if (err) throw err;
-  console.log("connected to database");
-});
+function connectToDB() {
+  connection.connect((err) => {
+    if (err) throw err;
+    console.log("connected to database");
+  });
+}
 
 function executeQuery(query) {
   return new Promise((resolve, reject) => {
@@ -23,5 +26,6 @@ function executeQuery(query) {
 }
 
 module.exports = {
+  connectToDB,
   executeQuery,
 };

@@ -2,27 +2,27 @@ import Link from "next/link";
 
 export default function Navigation() {
   return (
-    <nav class="navigation">
-      <div class="wrapper">
-        <div class="navigation-buttons">
-          <div class="navigation-button">
+    <nav className="navigation">
+      <div className="wrapper">
+        <div className="navigation-buttons">
+          <div className="navigation-button">
             <Link href="/home">
               <a>
-                <i class="bi bi-chat-fill active"></i>
+                <i className="bi bi-chat-fill"></i>
               </a>
             </Link>
           </div>
-          <div class="navigation-button">
+          <div className="navigation-button">
             <Link href="/contacts">
               <a>
-                <i class="bi bi-people-fill"></i>
+                <i className="bi bi-people-fill"></i>
               </a>
             </Link>
           </div>
-          <div class="navigation-button">
+          <div className="navigation-button">
             <Link href="/store">
               <a>
-                <i class="bi bi-bag-fill"></i>
+                <i className="bi bi-bag-fill"></i>
               </a>
             </Link>
           </div>

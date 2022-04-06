@@ -1,47 +1,55 @@
+import { useState } from "react";
+
 import Navigation from "../../components/navigation/navigation";
+import Contact from "../../components/contact/contact";
+import Chat from "../../components/chat/chat";
 
-export default function Contacts() {
+import { userModel } from "../../server/models/user";
+
+function Contacts(props) {
+  let [chatWith, setChatWith] = useState({});
   return (
-    <div class="grid">
-      <header class="header">
-        <div class="wrapper">
-          <i class="bi bi-list"></i>
-          <input type="text" placeholder="find people" />
-          <i class="bi bi-plus-circle-fill"></i>
-        </div>
-      </header>
+    <>
+      <div className="grid">
+        <div className="blackout"></div>
 
-      <div class="wrapper">
-        <div class="contacts">
-          <div class="contact">
-            <div class="contact__avatar">
-              <img
-                src="https://images.unsplash.com/photo-1640622304326-db5e15903ab4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
-                alt=""
-              />
-            </div>
-            <div class="contact__info">
-              <div class="contact__name">
-                <h3>Roman</h3>
-              </div>
-            </div>
+        <header className="header">
+          <div className="wrapper">
+            <i className="bi bi-list"></i>
+            <input type="text" id="search-people" placeholder="find people" />
+            <i className="bi bi-plus-circle-fill"></i>
           </div>
-          <div class="contact">
-            <div class="contact__avatar">
-              <img
-                src="https://images.unsplash.com/photo-1646602141523-5f1ca4361ee7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
-                alt=""
-              />
-            </div>
-            <div class="contact__info">
-              <div class="contact__name">
-                <h3>David</h3>
-              </div>
-            </div>
+        </header>
+
+        <div className="wrapper">
+          <div id="found-people"></div>
+
+          <div id="contacts" className="contacts">
+            <h1>Contacts</h1>
+            {Object.values(props.contacts).map((contact, key) => {
+              if (typeof props.contacts === "string") return;
+              return (
+                <Contact
+                  setChatWith={setChatWith}
+                  contact={contact}
+                  key={key}
+                />
+              );
+            })}
           </div>
         </div>
+        <Navigation />
       </div>
-      <Navigation />
-    </div>
+      <Chat contact={chatWith} />
+    </>
   );
 }
+export async function getServerSideProps(context) {
+  let contacts = await userModel.getUserContactsByID(context.query.id);
+
+  return {
+    props: { contacts }, // will be passed to the page component as props
+  };
+}
+
+export default Contacts;

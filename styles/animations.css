@@ -1,18 +1,28 @@
 @keyframes showUp {
-    from {
-        transform: translateY(100%)
-    }
-    to {
-        transform: translateY(0%)
-    }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
 }
 
-
 @keyframes hideRight {
-    from {
-        transform: translateX(0%)
-    }
-    to {
-        transform: translateX(100%)
-    }
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes nextStepForm {
+  from {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
 }

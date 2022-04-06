@@ -3,59 +3,51 @@ import Link from "next/link";
 export default function SingUp() {
   return (
     <form
-      class="welcome"
+      className="welcome"
       method="POST"
-      onChange={(event) => validateRegistrationFormInputs(event)}
+      onInput={(event) => NextStep(event)}
       action="/signup"
     >
       <img src="../wave.svg" alt="" />
-      <div class="wrapper">
-        <div class="welcome__heading">
+      <div className="wrapper">
+        <div className="welcome__heading">
           <h1>
             Cyber
             <br />
-            Message<i class="bi bi-chevron-double-down"></i>
+            Message<i className="bi bi-chevron-double-down"></i>
           </h1>
         </div>
-        <div class="welcome__inputs">
+        <div className="welcome__inputs">
           <h2>Sign up</h2>
-
-          <input
-            type="text"
-            placeholder="firstname"
-            id="firstname"
-            name="firstname"
-            autoComplete="off"
-            maxLength="100"
-          />
-          <input
-            type="text"
-            placeholder="lastname"
-            id="lastname"
-            name="lastname"
-            autoComplete="off"
-            maxLength="100"
-          />
-          <input
-            type="text"
-            placeholder="login"
-            id="login"
-            name="login"
-            autoComplete="off"
-            maxLength="25"
-          />
-          <input
-            type="password"
-            placeholder="password"
-            id="password"
-            name="password"
-            autoComplete="off"
-            maxLength="100"
-          />
+          <div className="signup-progress">
+            <div className="step green">1 step</div>
+            <div className="step">2 step</div>
+            <div className="step">finish</div>
+          </div>
+          <div className="step-inputs">
+            <div>
+              <input
+                type="text"
+                placeholder="firstname"
+                name="firstname"
+                autocomplete="off"
+              />
+              <input
+                type="text"
+                placeholder="lastname"
+                name="lastname"
+                autocomplete="off"
+              />
+            </div>
+            <div style={{ display: "none" }}>
+              <input type="text" placeholder="login" name="login" />
+              <input type="password" placeholder="password" name="password" />
+            </div>
+          </div>
         </div>
-        <div class="welcome__buttons">
-          <button type="submit" id="submit" disabled>
-            <h2>create account</h2>
+        <div className="welcome__buttons">
+          <button type="button" id="submit" disabled>
+            <h2>next step</h2>
           </button>
           <p>or</p>
           <Link href="/">

@@ -1,144 +1,160 @@
 .welcome {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.welcome img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: -2;
+}
+
+.welcome .wrapper {
+  height: 70%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 25% 50% 25%;
+  padding: 15px;
+}
+.welcome__heading {
+}
+
+.welcome__heading h1 {
+  font-weight: 600;
+  font-size: 3rem;
+  line-height: 45px;
+}
+
+.welcome__inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.step-inputs {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.step-inputs div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.signup-progress {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.step {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 25px;
+  background-color: #5cc19e50;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.step:nth-child(2) {
+  margin: 0 20px;
+}
+
+.welcome__buttons {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.welcome__buttons button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  background: #5cc19e;
+  box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  border: 0;
+  position: relative;
+  z-index: 10000;
+}
+
+.welcome__buttons button:disabled,
+.welcome__buttons button:disabled::after {
+  cursor: not-allowed;
+  background-color: #afafaf;
+}
+
+.welcome__buttons button:not(:disabled):hover,
+.welcome__buttons button:hover:not(:disabled)::after {
+  cursor: pointer;
+  background-color: #4cb490;
+}
+
+.welcome__buttons button::after {
+  content: "";
+  width: 200%;
+  height: 5px;
+  position: absolute;
+  background-color: #5cc19e;
+  z-index: 1;
+  border-radius: 25px;
+}
+
+.welcome__buttons h2 {
+  color: #fff;
+  z-index: 100;
+}
+
+@media screen and (max-width: 480px) {
+  .signup-progress {
+    justify-content: start;
   }
-  
-  .welcome img {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: -2;
-  }
-  
+}
+
+@media screen and (min-width: 480px) {
   .welcome .wrapper {
     height: 70%;
+    width: 50%;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 25% 50% 25%;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.25);
     padding: 15px;
   }
-  .welcome__heading {
-  }
-  
-  .welcome__heading h1 {
-    font-weight: 600;
-    font-size: 3rem;
-    line-height: 45px;
-  }
-  
+
   .welcome__inputs {
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
-  
-  .signup-progress {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .step {
-    min-width: 30px;
-    height: 30px;
-    padding: 0 10px;
-    border-radius: 25px;
-    background-color: #5cc19e50;
-    color: white;
-    display: flex;
-    justify-content: center;
     align-items: center;
   }
-  
-  .step:nth-child(2) {
-    margin: 0 20px;
+
+  .welcome__inputs input {
+    width: 50%;
   }
-  
-  .welcome__buttons {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-    justify-content: space-evenly;
-  }
-  
-  .welcome__buttons button {
+
+  .welcome__heading {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 15px;
-    background: #5cc19e;
-    box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 30px;
-    border: 0;
-    position: relative;
-    z-index: 10000;
   }
-  
-  .welcome__buttons button:disabled,
-  .welcome__buttons button:disabled::after {
-    cursor: not-allowed;
-    background-color: #afafaf;
-  }
-  
-  .welcome__buttons button:not(:disabled):hover,
-  .welcome__buttons button:hover:not(:disabled)::after {
-    cursor: pointer;
-    background-color: #4cb490;
-  }
-  
-  .welcome__buttons button::after {
-    content: "";
-    width: 200%;
-    height: 5px;
-    position: absolute;
-    background-color: #5cc19e;
-    z-index: 1;
-    border-radius: 25px;
-  }
-  
-  .welcome__buttons h2 {
-    color: #fff;
-    z-index: 100;
-  }
-  
-  @media screen and (max-width: 480px) {
-    .signup-progress {
-      justify-content: start;
-    }
-  }
-  
-  @media screen and (min-width: 480px) {
-    .welcome .wrapper {
-      height: 70%;
-      width: 50%;
-      display: grid;
-      grid-template-columns: 100%;
-      grid-template-rows: 25% 50% 25%;
-      background-color: rgba(255, 255, 255, 1);
-      box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.25);
-      padding: 15px;
-    }
-  
-    .welcome__inputs {
-      display: flex;
-      align-items: center;
-    }
-  
-    .welcome__inputs input {
-      width: 50%;
-    }
-  
-    .welcome__heading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-  
+}
