@@ -26,3 +26,12 @@
     opacity: 0;
   }
 }
+
+@keyframes fadeAway {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

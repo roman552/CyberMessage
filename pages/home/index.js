@@ -4,7 +4,7 @@ import Chat from "../../components/chat/chat";
 import Navigation from "../../components/navigation/navigation";
 import Contact from "../../components/contact/contact";
 
-import { userModel } from "../../server/models/user";
+import { contactsModel } from "../../server/models/contacts";
 
 function Home(props) {
   let [chatWith, setChatWith] = useState({});
@@ -15,7 +15,6 @@ function Home(props) {
         <header className="header">
           <div className="wrapper">
             <i className="bi bi-list"></i>
-            <input type="text" placeholder="search" />
           </div>
         </header>
 
@@ -45,9 +44,9 @@ function Home(props) {
 export async function getServerSideProps(context) {
   let id = context.query.id;
 
-  let contacts = await userModel.getUserContactsByID(id);
+  let contacts = await contactsModel.getAllAcceptedContacts(id);
   return {
-    props: { id, contacts }, // will be passed to the page component as props
+    props: { id, contacts },
   };
 }
 

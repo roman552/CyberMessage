@@ -20,8 +20,8 @@ class userModel {
     return result[0].id;
   }
 
-  static async getUserByID(id) {
-    let query = `SELECT * FROM users  
+  static async getUserByID(id, columns = ["*"]) {
+    let query = `SELECT ${columns.join(", ")} FROM users  
                 WHERE id = "${id}"`;
 
     let result = await executeQuery(query);
@@ -32,7 +32,7 @@ class userModel {
     return JSON.parse(JSON.stringify(result[0]));
   }
 
-  static async getUserByLogin(login) {
+  static async findUsersByLogin(login) {
     let query = `SELECT id, firstname, lastname FROM users  
                 WHERE login LIKE "${login}%"`;
 
@@ -40,19 +40,6 @@ class userModel {
 
     if (result.length === 0) {
       return JSON.parse(JSON.stringify(result));
-    }
-    return JSON.parse(JSON.stringify(result));
-  }
-
-  static async getUserContactsByID(id) {
-    let query = `SELECT users.id, users.firstname, users.lastname 
-                FROM contacts inner join users 
-                on contacts.user2ID = users.id 
-                WHERE contacts.user1ID = ${id}`;
-
-    let result = await executeQuery(query);
-    if (result.length === 0) {
-      return "No contacts";
     }
     return JSON.parse(JSON.stringify(result));
   }

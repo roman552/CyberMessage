@@ -1,59 +1,72 @@
 .contacts {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding-top: 15px;
-  }
-  
-  .contacts::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .contact {
-    margin: 3% 0px;
-    width: 100%;
-    height: 50px;
-    display: flex;
-    border-bottom: 1px solid #c9d1ea;
-    padding-bottom: 10px;
-  }
-  
-  .contact:hover {
-    cursor: pointer;
-  }
-  
-  .contact__avatar {
-    width: 50px;
-    height: 100%;
-  }
-  
-  .contact__avatar img {
-    width: 50px;
-    height: 100%;
-    border-radius: 100%;
-    object-fit: cover;
-  }
-  .contact__info {
-    margin-left: 15px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .contact__name {
-    width: 100%;
-    font-weight: 400;
-  }
-  .contact__last-message {
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-  
-  .not-read {
-    color: #5e6ea8;
-    font-weight: 600;
-  }
-  
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-top: 15px;
+}
+
+.contacts::-webkit-scrollbar {
+  display: none;
+}
+
+.contact,
+.contact-sm {
+  margin: 3% 0px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  border-bottom: 1px solid #c9d1ea;
+  padding-bottom: 10px;
+}
+
+.contact:hover {
+  cursor: pointer;
+}
+
+.contact__avatar {
+  width: 50px;
+  height: 100%;
+}
+
+.contact__avatar img {
+  width: 50px;
+  height: 100%;
+  border-radius: 100%;
+  object-fit: cover;
+}
+.contact__info {
+  margin-left: 15px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.contact__name {
+  width: 100%;
+  font-weight: 400;
+}
+.contact__last-message {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.contact-sm .contact__last-message {
+  justify-content: flex-end;
+}
+
+.contact-sm .contact__last-message i {
+  margin: 0 0.938rem;
+  font-size: 1.25rem;
+}
+
+.contact-sm .contact__last-message i:hover {
+  cursor: pointer;
+}
+
+.not-read {
+  color: #5e6ea8;
+  font-weight: 600;
+}

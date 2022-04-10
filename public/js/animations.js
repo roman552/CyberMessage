@@ -14,10 +14,16 @@ function hideChat() {
   let chat = document.getElementById("chat");
 
   chat.style.animationName = "hideRight";
-  chat.style.animationDuration = ".4s";
+  chat.style.animationDuration = ".5s";
   chat.style.animationFillMode = "forward";
 
-  setTimeout(() => (chat.style.display = "none"), 350);
+  setTimeout(() => (chat.style.display = "none"), 400);
 
   blackout.style.display = "none";
+}
+
+function fadeAway(element, duration) {
+  element.style.animationName = "fadeAway";
+  element.style.animationDuration = `${duration}s`;
+  setTimeout(() => (element.style.display = "none"), duration * 980);
 }

@@ -3,12 +3,14 @@ const session = require("express-session");
 const sharedsession = require("express-socket.io-session");
 
 const bodyParser = require("body-parser");
+
 const next = require("next");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
 const { connectToDB } = require("./database");
 const { userModel } = require("./models/user");
+const { contactsModel } = require("./models/contacts");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -22,7 +24,6 @@ function addToConnectedUsers(userID, socket) {
 
   if (connectedUser) {
     connectedUser.sockets.push(socket);
-
     return;
   }
 
@@ -30,7 +31,7 @@ function addToConnectedUsers(userID, socket) {
 }
 
 function findConnectedUser(userID) {
-  return connectedUsers.find((user) => user.userID === userID);
+  return connectedUsers.find((user) => user.userID == userID);
 }
 
 const sessionMiddleware = session({
@@ -39,6 +40,9 @@ const sessionMiddleware = session({
   saveUninitialized: true,
   credentials: true,
   name: "sid",
+  cookie: {
+    expires: Date.now() + 3600000,
+  },
 });
 
 const server = express();
@@ -72,12 +76,54 @@ app.prepare().then(() => {
     }
 
     socket.on("find-people", async (args) => {
-      let user = await userModel.getUserByLogin(args.login);
-      socket.emit("find-people-response", user);
+      if (args.login.length === 0) return;
+      let users = await userModel.findUsersByLogin(args.login);
+      users = users.filter(
+        (user) => user.id !== socket.handshake.session.user.id
+      );
+
+      socket.emit("find-people-response", users);
     });
 
     socket.on("send-friend-request", async (friendID) => {
-      // send request
+      contactsModel.saveContactRequest(
+        socket.handshake.session.user.id,
+        friendID
+      );
+
+      let newFriendUser = findConnectedUser(friendID);
+      if (newFriendUser) {
+        let requester = await userModel.getUserByID(
+          socket.handshake.session.user.id,
+          ["id", "firstname", "lastname"]
+        );
+        newFriendUser.sockets.forEach((conn) => {
+          io.to(conn).emit("new-friend-request", requester);
+        });
+      }
+    });
+
+    socket.on("accept-friend-request", async (requesterID) => {
+      contactsModel.acceptContactRequset(
+        socket.handshake.session.user.id,
+        requesterID
+      );
+      let userConnections = findConnectedUser(socket.handshake.session.user.id);
+      if (userConnections) {
+        let requester = await userModel.getUserByID(requesterID, [
+          "id",
+          "firstname",
+          "lastname",
+        ]);
+
+        userConnections.sockets.forEach((conn) => {
+          io.to(conn).emit("added-friend", requester);
+        });
+      }
+    });
+
+    socket.on("decline-friend-request", (requesterID) => {
+      //decline
     });
   });
 
@@ -182,7 +228,9 @@ app.prepare().then(() => {
       actualPage = "/home";
       queryParams = {
         ...req.session.user,
-        contacts: await userModel.getUserContactsByID(req.session.user.id),
+        contacts: await contactsModel.getAllAcceptedContacts(
+          req.session.user.id
+        ),
       };
 
       return app.render(req, res, actualPage, queryParams);
@@ -200,7 +248,9 @@ app.prepare().then(() => {
       actualPage = "/contacts";
       queryParams = {
         ...req.session.user,
-        contacts: await userModel.getUserContactsByID(req.session.user.id),
+        contacts: await contactsModel.getAllAcceptedContacts(
+          req.session.user.id
+        ),
       };
       return app.render(req, res, actualPage, queryParams);
     }

@@ -5,7 +5,6 @@ export default function Layout({ children }) {
     <>
       <Head></Head>
       {children}
-      <script src="js/index.js"></script>
       <script src="js/validation.js"></script>
       <script src="/js/animations.js"></script>
       <script

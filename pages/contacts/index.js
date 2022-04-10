@@ -1,13 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import socket from "socket.io-client";
 
 import Navigation from "../../components/navigation/navigation";
 import Contact from "../../components/contact/contact";
 import Chat from "../../components/chat/chat";
+import ContactSm from "../../components/contact/contact-sm";
 
-import { userModel } from "../../server/models/user";
+import { contactsModel } from "../../server/models/contacts";
 
 function Contacts(props) {
+  let [contacts, setContacts] = useState(Object.values(props.contacts));
+  let [friendRequests, setfriendRequests] = useState(
+    Object.values(props.friendRequests)
+  );
   let [chatWith, setChatWith] = useState({});
+
+  useEffect(() => {
+    const client = socket();
+    client.on("new-friend-request", (user) => {
+      setfriendRequests([...friendRequests, user]);
+    });
+
+    client.on("added-friend", (user) => {
+      setContacts([...contacts, user]);
+    });
+  }, []);
+
   return (
     <>
       <div className="grid">
@@ -17,17 +35,25 @@ function Contacts(props) {
           <div className="wrapper">
             <i className="bi bi-list"></i>
             <input type="text" id="search-people" placeholder="find people" />
-            <i className="bi bi-plus-circle-fill"></i>
+            <i
+              className="bi bi-search"
+              onClick={() => {
+                searchPeople();
+              }}
+            ></i>
           </div>
         </header>
 
         <div className="wrapper">
-          <div id="found-people"></div>
+          <div id="found-people">
+            {friendRequests.map((contact, key) => {
+              return <ContactSm contact={contact} key={key} />;
+            })}
+          </div>
 
           <div id="contacts" className="contacts">
             <h1>Contacts</h1>
-            {Object.values(props.contacts).map((contact, key) => {
-              if (typeof props.contacts === "string") return;
+            {contacts.map((contact, key) => {
               return (
                 <Contact
                   setChatWith={setChatWith}
@@ -45,10 +71,12 @@ function Contacts(props) {
   );
 }
 export async function getServerSideProps(context) {
-  let contacts = await userModel.getUserContactsByID(context.query.id);
+  let id = context.query.id;
 
+  let friendRequests = await contactsModel.getAllUnacceptedContacts(id);
+  let contacts = await contactsModel.getAllAcceptedContacts(id);
   return {
-    props: { contacts }, // will be passed to the page component as props
+    props: { id, friendRequests, contacts },
   };
 }
 
