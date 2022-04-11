@@ -109,6 +109,7 @@ app.prepare().then(() => {
         requesterID
       );
       let userConnections = findConnectedUser(socket.handshake.session.user.id);
+      let requesterConnections = findConnectedUser(requesterID);
       if (userConnections) {
         let requester = await userModel.getUserByID(requesterID, [
           "id",
@@ -118,6 +119,16 @@ app.prepare().then(() => {
 
         userConnections.sockets.forEach((conn) => {
           io.to(conn).emit("added-friend", requester);
+        });
+      }
+      if (requesterConnections) {
+        let user = await userModel.getUserByID(
+          socket.handshake.session.user.id,
+          ["id", "firstname", "lastname"]
+        );
+
+        requesterConnections.sockets.forEach((conn) => {
+          io.to(conn).emit("added-friend", user);
         });
       }
     });

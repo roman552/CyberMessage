@@ -30,13 +30,13 @@ export default function SingUp() {
                 type="text"
                 placeholder="firstname"
                 name="firstname"
-                autocomplete="off"
+                autoComplete="off"
               />
               <input
                 type="text"
                 placeholder="lastname"
                 name="lastname"
-                autocomplete="off"
+                autoComplete="off"
               />
             </div>
             <div style={{ display: "none" }}>

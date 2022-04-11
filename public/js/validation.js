@@ -17,6 +17,7 @@ function NextStep(event) {
       form.password.value.length <= 100
     ) {
       btn.disabled = false;
+      btn.type = "submit";
     }
   }
 
@@ -41,7 +42,6 @@ function NextStepBtnClick() {
   if (!steps[1].classList.contains("green")) {
     steps[1].classList.add("green");
     btn.innerHTML = "<h2>create account</h2>";
-    btn.type = "submit";
     btn.onclick = () => {
       steps[2].classList.add("green");
     };
