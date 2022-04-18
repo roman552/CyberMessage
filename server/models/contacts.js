@@ -5,7 +5,8 @@ class contactsModel {
     let query = `INSERT INTO contacts (id, user1ID, user2ID) 
                 VALUES (NULL, '${requesterID}', '${friendID}')`;
 
-    await executeQuery(query);
+    let result = await executeQuery(query).catch((err) => "ERROR");
+    return result;
   }
   static async getAllAcceptedContacts(userID) {
     let query = `SELECT users.id, users.firstname, users.lastname 
@@ -39,6 +40,13 @@ class contactsModel {
     
                  INSERT INTO contacts (id, user1ID, user2ID, isAccepted) 
                  VALUES (NULL, '${userID}', '${requesterID}', 1)`;
+
+    await executeQuery(query);
+  }
+
+  static async declineContactRequset(userID, requesterID) {
+    let query = `DELETE FROM contacts 
+                 WHERE user1ID = ${requesterID} AND user2ID = ${userID};`;
 
     await executeQuery(query);
   }

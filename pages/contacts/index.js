@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import socket from "socket.io-client";
 
 import Navigation from "../../components/navigation/navigation";
@@ -7,24 +7,26 @@ import Chat from "../../components/chat/chat";
 import ContactSm from "../../components/contact/contact-sm";
 
 import { contactsModel } from "../../server/models/contacts";
+const client = socket();
 
 function Contacts(props) {
   let [contacts, setContacts] = useState(Object.values(props.contacts));
-  let [friendRequests, setfriendRequests] = useState(
+  let [friendRequests, setFriendRequests] = useState(
     Object.values(props.friendRequests)
   );
   let [chatWith, setChatWith] = useState({});
 
-  useEffect(() => {
-    const client = socket();
-    client.on("new-friend-request", (user) => {
-      setfriendRequests([...friendRequests, user]);
-    });
+  client.on("new-friend-request", (user) => {
+    let uniqueRequests = [...friendRequests, user];
+    uniqueRequests = Array.from(
+      new Set(uniqueRequests.map(JSON.stringify))
+    ).map(JSON.parse);
+    setFriendRequests([...uniqueRequests]);
+  });
 
-    client.on("added-friend", (user) => {
-      setContacts([...contacts, user]);
-    });
-  }, []);
+  client.on("added-friend", (user) => {
+    setContacts([...contacts, user]);
+  });
 
   return (
     <>

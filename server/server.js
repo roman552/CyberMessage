@@ -1,8 +1,8 @@
 const express = require("express");
 const session = require("express-session");
 const sharedsession = require("express-socket.io-session");
-
 const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
 
 const next = require("next");
 const { createServer } = require("http");
@@ -86,10 +86,12 @@ app.prepare().then(() => {
     });
 
     socket.on("send-friend-request", async (friendID) => {
-      contactsModel.saveContactRequest(
+      let contactRequest = await contactsModel.saveContactRequest(
         socket.handshake.session.user.id,
         friendID
       );
+
+      if (contactRequest === "ERROR") return;
 
       let newFriendUser = findConnectedUser(friendID);
       if (newFriendUser) {
@@ -133,8 +135,11 @@ app.prepare().then(() => {
       }
     });
 
-    socket.on("decline-friend-request", (requesterID) => {
-      //decline
+    socket.on("decline-friend-request", async (requesterID) => {
+      await contactsModel.declineContactRequset(
+        socket.handshake.session.user.id,
+        requesterID
+      );
     });
   });
 
@@ -164,6 +169,17 @@ app.prepare().then(() => {
           req.body.password.length <= 100
         )
       ) {
+        let hashedPassword = await userModel.getHashedPassword(req.body.login);
+        let isCorrectPassword = await bcrypt
+          .compare(req.body.password, hashedPassword)
+          .then((result) => {
+            return result;
+          });
+
+        if (!isCorrectPassword) {
+          return res.send("Wrong username or password");
+        }
+
         let user = {
           firstname: req.body.firstname,
           lastname: req.body.lastname,
@@ -205,11 +221,19 @@ app.prepare().then(() => {
           req.body.password.length <= 100
         )
       ) {
+        let pass = await bcrypt
+          .hash(req.body.password, 10)
+          .then(function (hash) {
+            return hash;
+          });
+
+        console.log(pass);
+
         let user = {
           firstname: req.body.firstname,
           lastname: req.body.lastname,
           login: req.body.login,
-          password: req.body.password,
+          password: pass,
         };
 
         userModel.saveUser(user);

@@ -11,13 +11,24 @@ class userModel {
 
   static async getUserID(user) {
     let query = `SELECT id FROM users  
-                WHERE login = "${user.login}" AND password = "${user.password}"`;
+                WHERE login = "${user.login}"`;
 
     let result = await executeQuery(query);
     if (result.length === 0) {
       return "No such user";
     }
     return result[0].id;
+  }
+
+  static async getHashedPassword(login) {
+    let query = `SELECT password FROM users  
+                WHERE login = "${login}"`;
+
+    let result = await executeQuery(query);
+    if (result.length === 0) {
+      return "No such user";
+    }
+    return result[0].password;
   }
 
   static async getUserByID(id, columns = ["*"]) {
