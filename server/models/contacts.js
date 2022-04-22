@@ -24,7 +24,7 @@ class contactsModel {
     let query = `SELECT users.id, users.firstname, users.lastname 
                  FROM contacts inner join users 
                  on contacts.user1ID = users.id 
-                 WHERE contacts.user2ID = ${userID} AND contacts.isAccepted = 0`;
+                 WHERE contacts.user2ID = "${userID}" AND contacts.isAccepted = 0`;
 
     let result = await executeQuery(query);
     if (result.length === 0) {

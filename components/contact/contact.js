@@ -5,6 +5,7 @@ export default function Contact(props) {
       className="contact"
       onClick={() => {
         props.setChatWith(props.contact);
+        props.fetchMessages(props.contact.id);
         showChat();
       }}
     >
@@ -19,7 +20,7 @@ export default function Contact(props) {
           <h3>{props.contact.firstname + " " + props.contact.lastname}</h3>
         </div>
         <div className="contact__last-message">
-          <p>how its going?</p>
+          <p>hi!</p>
           <p>12:12</p>
         </div>
       </div>

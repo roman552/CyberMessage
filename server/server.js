@@ -11,6 +11,7 @@ const { Server } = require("socket.io");
 const { connectToDB } = require("./database");
 const { userModel } = require("./models/user");
 const { contactsModel } = require("./models/contacts");
+const { MessagesModel } = require("./models/messages");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -141,6 +142,15 @@ app.prepare().then(() => {
         requesterID
       );
     });
+
+    socket.on("fetch-messages", async (friendID) => {
+      let messages = await MessagesModel.findAll(
+        socket.handshake.session.user.id,
+        friendID
+      );
+
+      io.to(socket.id).emit("receive-messages", messages);
+    });
   });
 
   server.get("/", (req, res) => {
@@ -170,11 +180,11 @@ app.prepare().then(() => {
         )
       ) {
         let hashedPassword = await userModel.getHashedPassword(req.body.login);
-        let isCorrectPassword = await bcrypt
-          .compare(req.body.password, hashedPassword)
-          .then((result) => {
-            return result;
-          });
+
+        let isCorrectPassword = await bcrypt.compare(
+          req.body.password,
+          hashedPassword
+        );
 
         if (!isCorrectPassword) {
           return res.send("Wrong username or password");
@@ -227,8 +237,6 @@ app.prepare().then(() => {
             return hash;
           });
 
-        console.log(pass);
-
         let user = {
           firstname: req.body.firstname,
           lastname: req.body.lastname,
@@ -255,10 +263,9 @@ app.prepare().then(() => {
   server.get("/home", async (req, res) => {
     let actualPage;
     let queryParams;
-
     if (!req.session.user) {
       actualPage = "/";
-      return app.render(req, res, actualPage, queryParams);
+      return await app.render(req, res, actualPage, queryParams);
     } else {
       actualPage = "/home";
       queryParams = {
@@ -268,7 +275,7 @@ app.prepare().then(() => {
         ),
       };
 
-      return app.render(req, res, actualPage, queryParams);
+      return await app.render(req, res, actualPage, queryParams);
     }
   });
 
@@ -278,16 +285,17 @@ app.prepare().then(() => {
 
     if (!req.session.user) {
       actualPage = "/";
-      return app.render(req, res, actualPage, queryParams);
+      return await app.render(req, res, actualPage, queryParams);
     } else {
       actualPage = "/contacts";
+      let contacts = await contactsModel.getAllAcceptedContacts(
+        req.session.user.id
+      );
       queryParams = {
         ...req.session.user,
-        contacts: await contactsModel.getAllAcceptedContacts(
-          req.session.user.id
-        ),
+        contacts,
       };
-      return app.render(req, res, actualPage, queryParams);
+      return await app.render(req, res, actualPage, queryParams);
     }
   });
 

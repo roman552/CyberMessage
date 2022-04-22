@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import socket from "socket.io-client";
 
 import Navigation from "../../components/navigation/navigation";
@@ -15,18 +15,29 @@ function Contacts(props) {
     Object.values(props.friendRequests)
   );
   let [chatWith, setChatWith] = useState({});
+  let [messages, setMessages] = useState([]);
 
-  client.on("new-friend-request", (user) => {
-    let uniqueRequests = [...friendRequests, user];
-    uniqueRequests = Array.from(
-      new Set(uniqueRequests.map(JSON.stringify))
-    ).map(JSON.parse);
-    setFriendRequests([...uniqueRequests]);
-  });
+  let fetchMessages = (friendID) => {
+    client.emit("fetch-messages", friendID);
+  };
 
-  client.on("added-friend", (user) => {
-    setContacts([...contacts, user]);
-  });
+  useEffect(() => {
+    client.on("new-friend-request", (user) => {
+      let uniqueRequests = [...friendRequests, user];
+      uniqueRequests = Array.from(
+        new Set(uniqueRequests.map(JSON.stringify))
+      ).map(JSON.parse);
+      setFriendRequests([...uniqueRequests]);
+    });
+
+    client.on("added-friend", (user) => {
+      setContacts([...contacts, user]);
+    });
+
+    client.on("receive-messages", (messages) => {
+      setMessages(messages);
+    });
+  }, []);
 
   return (
     <>
@@ -59,6 +70,7 @@ function Contacts(props) {
               return (
                 <Contact
                   setChatWith={setChatWith}
+                  fetchMessages={fetchMessages}
                   contact={contact}
                   key={key}
                 />
@@ -68,7 +80,7 @@ function Contacts(props) {
         </div>
         <Navigation />
       </div>
-      <Chat contact={chatWith} />
+      <Chat contact={chatWith} messages={messages} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Chat from "../../components/chat/chat";
 import Navigation from "../../components/navigation/navigation";
@@ -6,8 +6,27 @@ import Contact from "../../components/contact/contact";
 
 import { contactsModel } from "../../server/models/contacts";
 
+import socket from "socket.io-client";
+
+const client = socket();
+
 function Home(props) {
   let [chatWith, setChatWith] = useState({});
+  let [messages, setMessages] = useState([]);
+
+  let fetchMessages = (friendID) => {
+    client.emit("fetch-messages", friendID);
+  };
+
+  useEffect(() => {
+    client.on("added-friend", (user) => {
+      setContacts([...contacts, user]);
+    });
+
+    client.on("receive-messages", (messages) => {
+      setMessages(messages);
+    });
+  }, []);
   return (
     <>
       <div className="grid" id="home">
@@ -26,6 +45,7 @@ function Home(props) {
               return (
                 <Contact
                   setChatWith={setChatWith}
+                  fetchMessages={fetchMessages}
                   contact={contact}
                   key={key}
                 />
@@ -36,7 +56,7 @@ function Home(props) {
 
         <Navigation />
       </div>
-      <Chat contact={chatWith} />
+      <Chat contact={chatWith} messages={messages} />
     </>
   );
 }
