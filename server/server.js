@@ -151,6 +151,30 @@ app.prepare().then(() => {
 
       io.to(socket.id).emit("receive-messages", messages);
     });
+
+    socket.on("send-message", async ({ friendID, messageText }) => {
+      let newMessageID = await MessagesModel.saveMessage(
+        socket.handshake.session.user.id,
+        friendID,
+        messageText
+      );
+
+      let newMessage = await MessagesModel.getMessageByID(newMessageID);
+
+      let userConnections = findConnectedUser(socket.handshake.session.user.id);
+      if (userConnections) {
+        userConnections.sockets.forEach((conn) => {
+          io.to(conn).emit("receive-new-message", newMessage);
+        });
+      }
+
+      let friendConnections = findConnectedUser(friendID);
+      if (friendConnections) {
+        friendConnections.sockets.forEach((conn) => {
+          io.to(conn).emit("receive-new-message", newMessage);
+        });
+      }
+    });
   });
 
   server.get("/", (req, res) => {
@@ -265,17 +289,15 @@ app.prepare().then(() => {
     let queryParams;
     if (!req.session.user) {
       actualPage = "/";
-      return await app.render(req, res, actualPage, queryParams);
+      app.render(req, res, actualPage, queryParams);
+      return;
     } else {
       actualPage = "/home";
       queryParams = {
         ...req.session.user,
-        contacts: await contactsModel.getAllAcceptedContacts(
-          req.session.user.id
-        ),
       };
 
-      return await app.render(req, res, actualPage, queryParams);
+      app.render(req, res, actualPage, queryParams);
     }
   });
 
@@ -288,12 +310,8 @@ app.prepare().then(() => {
       return await app.render(req, res, actualPage, queryParams);
     } else {
       actualPage = "/contacts";
-      let contacts = await contactsModel.getAllAcceptedContacts(
-        req.session.user.id
-      );
       queryParams = {
         ...req.session.user,
-        contacts,
       };
       return await app.render(req, res, actualPage, queryParams);
     }

@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 export default function Chat(props) {
+  let [messageText, setMessageText] = useState("");
+
   return (
     <div className="grid" id="chat">
       <header className="header">
@@ -24,6 +28,13 @@ export default function Chat(props) {
       <div className="wrapper">
         <div className="chat">
           {props.messages.map((message, key) => {
+            if (
+              !(
+                message.senderID === props.contact.id ||
+                message.receiverID === props.contact.id
+              )
+            )
+              return;
             return (
               <div
                 key={key}
@@ -64,10 +75,18 @@ export default function Chat(props) {
               type="text"
               placeholder="type your message"
               maxLength="150"
+              value={messageText}
+              onInput={(event) => setMessageText(event.target.value)}
             />
             <div className="input-buttons">
               <i className="bi bi-sticky-fill"></i>
-              <i className="bi bi-send-fill"></i>
+              <i
+                className="bi bi-send-fill"
+                onClick={() => {
+                  props.sendMessage(props.contact.id, messageText);
+                  setMessageText("");
+                }}
+              ></i>
             </div>
           </div>
         </div>

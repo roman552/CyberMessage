@@ -18,6 +18,10 @@ function Home(props) {
     client.emit("fetch-messages", friendID);
   };
 
+  let sendMessage = (friendID, messageText) => {
+    client.emit("send-message", { friendID, messageText });
+  };
+
   useEffect(() => {
     client.on("added-friend", (user) => {
       setContacts([...contacts, user]);
@@ -25,6 +29,16 @@ function Home(props) {
 
     client.on("receive-messages", (messages) => {
       setMessages(messages);
+      document
+        .getElementsByClassName("chat")[0]
+        .scrollTo(0, document.getElementsByClassName("chat")[0].scrollHeight);
+    });
+
+    client.on("receive-new-message", (message) => {
+      setMessages((messages) => [...messages, message]);
+      document
+        .getElementsByClassName("chat")[0]
+        .scrollTo(0, document.getElementsByClassName("chat")[0].scrollHeight);
     });
   }, []);
   return (
@@ -53,10 +67,9 @@ function Home(props) {
             })}
           </div>
         </div>
-
         <Navigation />
       </div>
-      <Chat contact={chatWith} messages={messages} />
+      <Chat contact={chatWith} messages={messages} sendMessage={sendMessage} />
     </>
   );
 }
