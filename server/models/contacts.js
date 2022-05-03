@@ -5,7 +5,7 @@ class contactsModel {
     let query = `INSERT INTO contacts (id, user1ID, user2ID) 
                 VALUES (NULL, '${requesterID}', '${friendID}')`;
 
-    let result = await executeQuery(query).catch((err) => "ERROR");
+    let result = await executeQuery(query).catch((err) => {return "ERROR"});
     return result;
   }
   static async getAllAcceptedContacts(userID) {

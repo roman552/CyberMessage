@@ -8,7 +8,7 @@ socket.on("find-people-response", (args) => {
   args.map((user) => {
     document.getElementById("found-people").innerHTML += `<div id=${
       user.id
-    } class="contact-sm" onclick = "sendFriendRequest(event); fadeAway(this, 0.5)">
+    } class="contact-sm" >
         <div class="contact__avatar">
           <img
             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -20,7 +20,7 @@ socket.on("find-people-response", (args) => {
             <h3>${user.firstname + " " + user.lastname}</h3>
           </div>
           <div class="contact__last-message">
-            <i class="bi bi-plus-square-fill"></i>
+            <i class="bi bi-plus-square-fill" onclick = "sendFriendRequest(event); fadeAway(this.parentElement.parentElement.parentElement, 0.5)"></i>
           </div>
         </div>
       </div>`;
@@ -28,7 +28,7 @@ socket.on("find-people-response", (args) => {
 });
 
 function sendFriendRequest(event) {
-  let foundUserID = event.currentTarget.id;
+  let foundUserID = event.currentTarget.parentElement.parentElement.parentElement.id;
   socket.emit("send-friend-request", foundUserID);
 }
 
